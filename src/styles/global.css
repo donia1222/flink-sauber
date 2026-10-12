@@ -1,0 +1,431 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-serif: var(--font-bricolage), sans-serif;
+  --font-sans: var(--font-sans-jakarta), sans-serif;
+}
+
+@theme {
+  /* Los colores del logo: azul noche y oro; más blanco escarcha, hielo y azul agua. */
+  --color-nacht: #0a1628;
+  --color-tinte: #13294a;
+  --color-schiefer: #5d6f85;
+  --color-frost: #f3f7fa;
+  --color-eis: #dfeaf2;
+  --color-wasser: #8fd0ea;
+  --color-gold: #d4ae6a;
+  --color-gold-tief: #a87f3c;
+  --ease-fluid: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@layer base {
+  /* Móvil: la página no se puede arrastrar a los lados; el zoom con dos dedos sigue permitido. */
+  html,
+  body {
+    overflow-x: clip;
+    overscroll-behavior-x: none;
+    touch-action: pan-y pinch-zoom;
+  }
+
+  html {
+    background-color: var(--color-nacht);
+    color: var(--color-frost);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-nacht);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* El acento de los titulares: en oro (en las secciones claras, oro oscuro), sin cursiva. */
+  em {
+    font-family: var(--font-serif);
+    font-style: normal;
+    color: var(--color-gold);
+  }
+
+  .bg-frost em {
+    color: var(--color-gold-tief);
+  }
+
+  ::selection {
+    background-color: var(--color-gold);
+    color: var(--color-nacht);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-wasser);
+    outline-offset: 4px;
+  }
+}
+
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    border-radius: 9999px;
+    padding: 10px 22px;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition:
+      background-color 600ms var(--ease-fluid),
+      color 600ms var(--ease-fluid),
+      transform 600ms var(--ease-fluid);
+  }
+
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .btn-gold {
+    background-image: linear-gradient(135deg, #ecd19a, #d4ae6a 55%, #c39a52);
+    color: var(--color-nacht);
+    box-shadow: 0 10px 30px -12px rgb(212 174 106 / 0.8), inset 0 1px 0 rgb(255 255 255 / 0.45);
+  }
+
+  .btn-gold:hover {
+    background-image: linear-gradient(135deg, #fff, #f3f7fa);
+  }
+
+  .btn-glas {
+    background-color: rgb(10 22 40 / 0.55);
+    box-shadow: inset 0 0 0 1px rgb(243 247 250 / 0.3);
+    color: var(--color-frost);
+  }
+
+  .btn-glas:hover {
+    background-color: var(--color-frost);
+    color: var(--color-nacht);
+  }
+
+  /* Cabecera: el logo en una píldora oscura que se lee sobre el hero y sobre las secciones claras. */
+  .kopf-pille {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 9999px;
+    padding: 6px 16px 6px 8px;
+    font-size: 12px;
+    background-color: rgb(10 22 40 / 0.78);
+    box-shadow: inset 0 0 0 1px rgb(243 247 250 / 0.14);
+    color: var(--color-frost);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .kopf-pille,
+    .btn-glas {
+      backdrop-filter: blur(14px);
+    }
+  }
+
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(2.5rem);
+    transition:
+      opacity 1000ms var(--ease-fluid),
+      transform 1000ms var(--ease-fluid);
+    transition-delay: var(--d, 0ms);
+  }
+
+  .js [data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Texto de cada parada del hero: aparece y se enfoca cuando la parada es la actual. */
+.js .stop-body > * {
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition:
+    opacity 700ms var(--ease-fluid),
+    transform 700ms var(--ease-fluid),
+    filter 700ms var(--ease-fluid);
+}
+
+.js .stop.is-current .stop-body > *,
+.js .stop-body:focus-within > * {
+  opacity: 1;
+  transform: none;
+  transition-duration: 1200ms;
+}
+
+.stop.is-current .stop-body > :nth-child(2) { transition-delay: 80ms; }
+.stop.is-current .stop-body > :nth-child(3) { transition-delay: 160ms; }
+.stop.is-current .stop-body > :nth-child(4) { transition-delay: 240ms; }
+
+.js .stop:not(.is-current) .stop-body:not(:focus-within) {
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .js .stop-body > * {
+    filter: blur(8px);
+  }
+
+  .js .stop.is-current .stop-body > * {
+    filter: none;
+  }
+}
+
+.hint-line {
+  transform-origin: top;
+  animation: hint 2200ms var(--ease-fluid) infinite;
+}
+
+@keyframes hint {
+  0% { transform: scaleY(0); opacity: 1; }
+  60% { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(1); opacity: 0; }
+}
+
+/* Gotas del indicador: el agua sube desde abajo según --f. */
+.tropfen-wasser {
+  fill: var(--color-wasser);
+  transform-box: fill-box;
+  transform-origin: bottom;
+  transform: scaleY(var(--f, 0));
+}
+
+/* Tarjetas de servicios: la foto sucia encima de la limpia. La rasqueta (secciones.ts) recorta lo sucio. */
+.karte {
+  transform-origin: 50% 60%;
+  will-change: transform;
+}
+
+.schmutz {
+  clip-path: polygon(-8% 0, 110% 0, 110% 100%, -14% 100%);
+}
+
+.schmutz-bild {
+  filter: grayscale(0.55) sepia(0.45) brightness(0.78) contrast(0.78) blur(2px);
+  transform: scale(1.03);
+}
+
+/* Polvo, manchas de agua secas y huellas: ruido fino y manchas suaves. */
+.schmutz-flecken {
+  background-image:
+    radial-gradient(circle at 22% 30%, rgb(120 100 70 / 0.35), transparent 18%),
+    radial-gradient(circle at 70% 18%, rgb(255 255 255 / 0.18), transparent 14%),
+    radial-gradient(circle at 60% 72%, rgb(110 90 60 / 0.3), transparent 22%),
+    radial-gradient(circle at 15% 85%, rgb(255 255 255 / 0.14), transparent 16%),
+    radial-gradient(ellipse 40% 12% at 50% 45%, rgb(255 255 255 / 0.12), transparent),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.22 0 0 0 1.4 -0.55'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-color: rgb(150 140 120 / 0.18);
+}
+
+.abzieher {
+  position: absolute;
+  top: -4%;
+  bottom: -4%;
+  left: -10%;
+  width: 6px;
+  margin-left: -3px;
+  border-radius: 3px;
+  background: linear-gradient(#f3f7fa, #fff);
+  box-shadow:
+    -2px 0 0 0 var(--color-gold),
+    0 0 18px 6px rgb(143 208 234 / 0.55),
+    10px 0 24px rgb(10 22 40 / 0.25);
+  rotate: 2.7deg;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* El mango de la rasqueta asoma por arriba. */
+.abzieher-griff {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  width: 14px;
+  height: 46px;
+  margin-left: -7px;
+  border-radius: 7px;
+  background: var(--color-nacht);
+  box-shadow: inset 0 0 0 1px rgb(212 174 106 / 0.6);
+}
+
+.karte-glanz {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 35%, rgb(255 255 255 / 0.55) 48%, rgb(255 255 255 / 0.8) 50%, rgb(255 255 255 / 0.55) 52%, transparent 65%);
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  background-repeat: no-repeat;
+  mix-blend-mode: soft-light;
+  opacity: 0;
+}
+
+.karte-glanz.is-on {
+  opacity: 1;
+  background-position: 0% 0;
+  transition:
+    background-position 1100ms var(--ease-fluid),
+    opacity 200ms;
+}
+
+/* Comparador antes/después: la foto de antes se recorta hasta --pos. */
+.vergleich {
+  --pos: 100%;
+}
+
+.vergleich-vorher {
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+
+.vergleich-linie {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 2px;
+  margin-left: -1px;
+  background: var(--color-frost);
+  box-shadow: 0 0 16px rgb(143 208 234 / 0.8);
+}
+
+.vergleich-knopf {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: var(--color-frost);
+  color: var(--color-nacht);
+  box-shadow: 0 10px 30px -8px rgb(0 0 0 / 0.6), 0 0 0 6px rgb(243 247 250 / 0.2);
+  transition: scale 400ms var(--ease-fluid);
+}
+
+.vergleich-knopf svg {
+  width: 22px;
+  height: 22px;
+}
+
+.vergleich:hover .vergleich-knopf,
+.vergleich.is-aktiv .vergleich-knopf {
+  scale: 1.1;
+}
+
+.polaroid {
+  padding: 10px 10px 0;
+  border-radius: 6px;
+  background: #fbfcfd;
+  color: var(--color-nacht);
+  box-shadow: 0 30px 60px -25px rgb(0 0 0 / 0.75);
+}
+
+.polaroid figcaption {
+  padding: 10px 2px 12px;
+  font-family: var(--font-serif);
+  font-size: clamp(0.9rem, 3.4vw, 1.05rem);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+/* Reseñas: un destello cruza la tarjeta cuando aparece, como un cristal recién limpiado. */
+.stimme::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 38%, rgb(143 208 234 / 0.25) 48%, rgb(255 255 255 / 0.9) 50%, rgb(143 208 234 / 0.25) 52%, transparent 62%);
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  background-repeat: no-repeat;
+}
+
+.stimme.is-in::after {
+  background-position: 0% 0;
+  transition: background-position 1400ms 350ms var(--ease-fluid);
+  transition-delay: calc(var(--d, 0ms) + 350ms);
+}
+
+/* Pasos: apagados hasta que el agua llega. */
+.schritt {
+  opacity: 0.3;
+  transform: translateX(-10px);
+  transition:
+    opacity 700ms var(--ease-fluid),
+    transform 700ms var(--ease-fluid);
+}
+
+.schritt.is-on {
+  opacity: 1;
+  transform: none;
+}
+
+.wasser-tropfen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 14px;
+  height: 19px;
+  translate: -50% -30%;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px rgb(143 208 234 / 0.9));
+}
+
+.wasser-tropfen svg {
+  width: 100%;
+  height: 100%;
+  fill: var(--color-wasser);
+}
+
+/* Nombre del pie. */
+.wortmarke-text {
+  font-family: var(--font-sans);
+  font-size: 138px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.name-glanz {
+  opacity: 0;
+}
+
+/* Limpio del todo: el brillo lo cruza cada pocos segundos. */
+[data-wortmarke].is-sauber .name-glanz {
+  opacity: 1;
+  animation: nameglanz 5s 300ms var(--ease-fluid) infinite;
+}
+
+@keyframes nameglanz {
+  0% { transform: skewX(-20deg) translateX(0); }
+  45%, 100% { transform: skewX(-20deg) translateX(1600px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hint-line,
+  [data-wortmarke].is-sauber .name-glanz {
+    animation: none;
+  }
+
+  .js [data-reveal],
+  .js .stop-body > * {
+    transform: none;
+  }
+}
