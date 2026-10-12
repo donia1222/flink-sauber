@@ -5,7 +5,6 @@ import '../styles/global.css';
 import { display, sans } from './fonts';
 import Motion from '../components/Motion';
 
-
 export const metadata: Metadata = {
   title: 'DF Flink Sauber · Reinigung in Liechtenstein',
   description:
