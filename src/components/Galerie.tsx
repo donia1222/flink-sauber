@@ -133,11 +133,11 @@ export default function Galerie() {
                 loading="lazy"
                 className="size-full object-cover transition duration-500 group-hover:scale-[1.04]"
               />
-              {f.titulo && (
-                <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-nacht/85 to-transparent px-3 pt-8 pb-3 text-left text-[13px] font-medium">
-                  {f.titulo}
-                </span>
-              )}
+              {/* Sin rotulo encima de la foto. Casi todas se subieron sin
+                  titulo, asi que llevaban el nombre del fichero y en la web
+                  salia «772686047_1047503178200387…» cruzando la imagen. El
+                  titulo sigue viajando: va en el `alt`, que es donde le
+                  sirve a quien no ve la foto y a Google. */}
             </button>
           ))}
         </div>
@@ -158,10 +158,12 @@ export default function Galerie() {
             alt={abierta.titulo || 'Arbeit von DF Flink Sauber'}
             className="max-h-[86vh] w-auto max-w-full rounded-2xl object-contain"
           />
-          {(abierta.titulo || abierta.descripcion) && (
+          {/* Ampliada, solo la descripcion: eso lo escribe ella a proposito
+              cuando quiere decir algo de la foto. El titulo no, por lo mismo
+              de arriba. */}
+          {abierta.descripcion && (
             <p className="absolute inset-x-0 bottom-6 px-6 text-center text-sm text-frost/80">
-              {abierta.titulo}
-              {abierta.descripcion ? ` — ${abierta.descripcion}` : ''}
+              {abierta.descripcion}
             </p>
           )}
           <button
