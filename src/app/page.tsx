@@ -1,6 +1,7 @@
 import PortalWorld from '../components/PortalWorld';
 import Leistungen from '../components/Leistungen';
 import EchteArbeit from '../components/EchteArbeit';
+import Galerie from '../components/Galerie';
 import Vertrauen from '../components/Vertrauen';
 import Kontakt from '../components/Kontakt';
 import Fuss from '../components/Fuss';
@@ -28,6 +29,10 @@ export default function Home() {
         <PortalWorld />
         <Leistungen />
         <EchteArbeit />
+        {/* Las fotos que Doris sube desde su panel. Van detras de «Vorher.
+            Nachher.» porque son lo mismo —trabajo de verdad— pero con mas
+            sitio y sin comparador. */}
+        <Galerie />
         <Vertrauen />
         <Kontakt />
       </main>
