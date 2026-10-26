@@ -268,6 +268,28 @@ export function animarGalerie(reduceMotion: boolean) {
     if (typeof t.vars.id === 'string' && t.vars.id.startsWith('galerie')) t.kill();
   });
 
+  /* Lo PRIMERO: encender los textos de la sección.
+     `[data-reveal]` nace invisible (opacity 0) y lo enciende un observador
+     que motion.ts crea al cargar la página — cuando aquí todavía no hay
+     nada. Resultado: el rótulo y el título de la galería quedaban puestos,
+     ocupando su sitio, pero sin verse nunca; en el móvil se veía un hueco
+     en blanco de media pantalla entre «Über uns» y las fotos. En el
+     escritorio salía bien de pura suerte: allí las fotos llegan antes de
+     que el observador arranque y sí las pilla.
+     Observador propio, y no `is-in` a secas, para que el texto entre
+     animado como en el resto de la página y no de golpe. */
+  const textos = document.querySelectorAll<HTMLElement>('#galerie [data-reveal]:not(.is-in)');
+  if (textos.length) {
+    const ojo = new IntersectionObserver((entradas) => {
+      for (const e of entradas) {
+        if (!e.isIntersecting) continue;
+        e.target.classList.add('is-in');
+        ojo.unobserve(e.target);
+      }
+    }, { rootMargin: '0px 0px -10% 0px' });
+    textos.forEach((t) => ojo.observe(t));
+  }
+
   const fotos = gsap.utils.toArray<HTMLElement>('[data-galerie-bild]');
   if (!fotos.length) return;
 
