@@ -3,6 +3,7 @@ import TropfenLeiste from './TropfenLeiste';
 import type { ReactNode } from 'react';
 import { recorrido } from '../data/escenas';
 import { firma } from '../data/firma';
+import { OfferteKnopf } from './Offerte';
 
 const title = 'mt-3 [text-shadow:0_2px_28px_rgb(10_22_40/0.65)] text-[clamp(2.4rem,7svh,3.4rem)] leading-[0.95] md:mt-4 md:text-8xl';
 const body = 'mt-[min(1.25rem,2svh)] [text-shadow:0_1px_14px_rgb(10_22_40/0.8)] max-w-lg text-[15px] text-frost/80 md:mt-5 md:text-lg';
@@ -13,10 +14,19 @@ const textos: Record<string, { eyebrow: string; inhalt: ReactNode }> = {
     eyebrow: 'Reinigung in Liechtenstein',
     inhalt: (
       <>
-        <h1 className={title}>
-          Makellose Räume für Ihr <em>Wohlbefinden</em>
+        {/* Su lema, el de la tarjeta de la empresa, es ahora lo primero que
+            se lee. Clase propia y no `title`: son catorce palabras en vez de
+            cinco, y con el tamaño del titular de antes ocupaba la pantalla
+            entera en un móvil. Un punto menos de cuerpo y la línea algo más
+            abierta: sigue mandando, pero cabe. */}
+        <h1 className="mt-3 [text-shadow:0_2px_28px_rgb(10_22_40/0.65)] text-[clamp(1.5rem,4.2svh,2.3rem)] leading-[1.08] md:mt-4 md:text-6xl">
+          Es ist nicht so, dass wir einzigartig sind,
+          <br className="hidden sm:block" /> <em>sondern, dass wir anders sind.</em>
         </h1>
-        <p className={body}>DF Flink Sauber aus Triesen. Scrollen Sie hinein: Wir machen den ersten Wisch.</p>
+        <p className={body}>
+          <strong className="font-semibold text-frost">Makellose Räume für Ihr Wohlbefinden.</strong>{' '}
+          DF Flink Sauber aus Triesen. Scrollen Sie hinein: Wir machen den ersten Wisch.
+        </p>
       </>
     ),
   },
@@ -57,9 +67,7 @@ const textos: Record<string, { eyebrow: string; inhalt: ReactNode }> = {
 
 const botones = (
   <div className="mt-[min(2rem,3.5svh)] flex flex-wrap justify-center gap-3">
-    <a href="#kontakt" className="btn btn-gold">
-      Kostenlose Offerte
-    </a>
+    <OfferteKnopf>Kostenlose Offerte</OfferteKnopf>
     <a href={firma.telefonLink} className="btn btn-glas">
       <svg viewBox="0 0 24 24" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" />

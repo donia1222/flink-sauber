@@ -2,6 +2,7 @@ import PortalWorld from '../components/PortalWorld';
 import Leistungen from '../components/Leistungen';
 import EchteArbeit from '../components/EchteArbeit';
 import Galerie from '../components/Galerie';
+import Offerte, { OfferteKnopf } from '../components/Offerte';
 import Vertrauen from '../components/Vertrauen';
 import Kontakt from '../components/Kontakt';
 import Fuss from '../components/Fuss';
@@ -20,10 +21,10 @@ export default function Home() {
             Flink <span className="text-gold">Sauber</span>
           </span>
         </a>
-        <a href="#kontakt" className="btn btn-gold pointer-events-auto">
+        <OfferteKnopf className="btn btn-gold pointer-events-auto">
           Offerte
           <span className="hidden md:inline">anfragen</span>
-        </a>
+        </OfferteKnopf>
       </header>
       <main>
         <PortalWorld />
@@ -37,6 +38,9 @@ export default function Home() {
         <Kontakt />
       </main>
       <Fuss />
+      {/* La ventana de la oferta, UNA sola para toda la página: cualquiera de
+          los botones la abre con un evento. */}
+      <Offerte />
     </>
   );
 }

@@ -56,6 +56,53 @@ export default function Galerie() {
     };
   }, []);
 
+  /**
+   * Llegando con #galerie en la dirección, la página baja sola hasta aquí.
+   *
+   * El ancla sola no vale: cuando el navegador la busca, esta sección
+   * todavía no existe —se pinta cuando contestan las fotos— así que se
+   * queda arriba y parece que el enlace no hace nada. Esto es lo que usa el
+   * botón «Auf der Webseite ansehen» del panel: Doris sube una foto, pulsa,
+   * y aterriza mirando la galería.
+   *
+   * El respiro deja que Lenis (el scroll suave) termine de montarse; sin él
+   * se pelea con el salto y a veces lo deshace.
+   */
+  useEffect(() => {
+    if (!fotos || fotos.length === 0) return;
+    if (window.location.hash !== '#galerie') return;
+    const reloj = setTimeout(() => {
+      document.getElementById('galerie')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 350);
+    return () => clearTimeout(reloj);
+  }, [fotos]);
+
+  /**
+   * Las fotos se animan con el scroll, como el resto de la página.
+   *
+   * Esto no puede ir en `initSecciones`, que corre una vez al cargar: cuando
+   * eso pasa, aquí todavía no hay ni una foto. Se llama al pintar y cada vez
+   * que cambia el filtro, porque entonces los elementos son otros.
+   *
+   * El script de animaciones se trae sólo cuando hace falta (import
+   * dinámico): es GSAP, y no tiene por qué pesar en la primera carga de quien
+   * nunca baja hasta aquí.
+   */
+  useEffect(() => {
+    if (!fotos || fotos.length === 0) return;
+    let vivo = true;
+    const parado = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Un fotograma de margen: si se pide antes de que el navegador haya
+    // colocado la rejilla, las medidas salen mal y la animación se queda a
+    // medio camino.
+    const reloj = requestAnimationFrame(() => {
+      import('../scripts/secciones')
+        .then((m) => { if (vivo) m.animarGalerie(parado); })
+        .catch(() => {});
+    });
+    return () => { vivo = false; cancelAnimationFrame(reloj); };
+  }, [fotos, area]);
+
   // Con la foto ampliada abierta, Escape la cierra: en el móvil se sale
   // tocando fuera, pero con teclado tiene que haber salida.
   useEffect(() => {
@@ -122,6 +169,7 @@ export default function Galerie() {
             <button
               key={f.id}
               type="button"
+              data-galerie-bild
               onClick={() => setAbierta(f)}
               className="group relative aspect-[4/3] overflow-hidden rounded-2xl bg-tinte"
               aria-label={f.titulo ? `${f.titulo} vergrössern` : 'Bild vergrössern'}

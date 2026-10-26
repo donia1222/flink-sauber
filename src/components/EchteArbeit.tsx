@@ -68,7 +68,7 @@ export default function EchteArbeit() {
         <div className="mt-24 grid items-center gap-10 md:mt-36 md:grid-cols-[0.9fr_1.1fr] md:gap-20">
           <div data-portrait className="portrait relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[2rem] bg-tinte md:max-w-none">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/escenas/eigene/team-portrait.webp" alt="Ein Mitarbeiter von DF Flink Sauber in Arbeitskleidung, hinter ihm das Rheintal und die Berge" loading="lazy" className="size-full object-cover" />
+            <img src="/escenas/eigene/team-portrait.webp" alt="Das Team von DF Flink Sauber auf einer Bank, dahinter die Berge und Häuser Liechtensteins" loading="lazy" className="size-full object-cover" />
           </div>
           <div>
             <p className="text-[11px] font-semibold tracking-[0.32em] text-wasser uppercase" data-reveal>

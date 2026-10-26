@@ -247,6 +247,89 @@ function fuss(reduceMotion: boolean) {
   });
 }
 
+/**
+ * Galería: cada foto se limpia al entrar, y las filas se mueven a distinta
+ * velocidad mientras pasa el scroll.
+ *
+ * Va aparte de `initSecciones` y se exporta porque esta sección NO existe
+ * cuando el resto se monta: sus fotos llegan del servidor. El componente la
+ * llama cada vez que vuelve a pintar (también al cambiar de filtro), así que
+ * lo primero es tirar los disparadores de la pasada anterior — si no, cada
+ * cambio de filtro dejaría otro juego encima y acabarían peleándose.
+ *
+ * El gesto es el de la casa: la foto entra velada y gris, y una pasada de
+ * izquierda a derecha —la misma dirección que la rasqueta de Leistungen— la
+ * deja nítida. Lo que cambia respecto a las Polaroids de «Echte Arbeit» es
+ * que aquí no hay giro ni caída: son muchas y juntas, y moverlas todas sería
+ * ruido. Se limpian, y ya.
+ */
+export function animarGalerie(reduceMotion: boolean) {
+  ScrollTrigger.getAll().forEach((t) => {
+    if (typeof t.vars.id === 'string' && t.vars.id.startsWith('galerie')) t.kill();
+  });
+
+  const fotos = gsap.utils.toArray<HTMLElement>('[data-galerie-bild]');
+  if (!fotos.length) return;
+
+  if (reduceMotion) {
+    // Sin animación, pero visibles: lo que no se puede quedar es a medias.
+    fotos.forEach((f) => gsap.set(f, { clearProps: 'all' }));
+    return;
+  }
+
+  fotos.forEach((f, i) => {
+    const img = f.querySelector('img');
+    // El retardo va por COLUMNA y no por orden: en una rejilla de tres, las
+    // tres de una fila entran a la vez y se lee como una pasada, no como una
+    // cola de fotos.
+    const columna = i % 3;
+
+    gsap
+      .timeline({
+        scrollTrigger: {
+          id: 'galerie-' + i,
+          trigger: f,
+          start: 'top 96%',
+          end: 'top 64%',
+          scrub: 0.5,
+        },
+      })
+      .fromTo(
+        f,
+        { clipPath: 'inset(0% 100% 0% 0%)', y: 26 },
+        { clipPath: 'inset(0% 0% 0% 0%)', y: 0, ease: 'power2.out', duration: 1 },
+        columna * 0.08,
+      )
+      .fromTo(
+        img,
+        { filter: 'saturate(0.15) brightness(1.35) blur(5px)', scale: 1.12 },
+        { filter: 'saturate(1) brightness(1) blur(0px)', scale: 1, ease: 'power1.inOut', duration: 1 },
+        columna * 0.08,
+      );
+
+    // Y un desplazamiento suave mientras la sección pasa: las columnas de los
+    // lados van un pelín más despacio que la del medio. Es poco —doce
+    // píxeles— y es justo lo que hace que el bloque no parezca una foto fija.
+    gsap.fromTo(
+      f,
+      { yPercent: columna === 1 ? 0 : 2.2 },
+      {
+        yPercent: columna === 1 ? 2.2 : 0,
+        ease: 'none',
+        scrollTrigger: {
+          id: 'galerie-p' + i,
+          trigger: f,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true,
+        },
+      },
+    );
+  });
+
+  ScrollTrigger.refresh();
+}
+
 export function initSecciones(reduceMotion: boolean) {
   leistungen(reduceMotion);
   vergleich(reduceMotion);

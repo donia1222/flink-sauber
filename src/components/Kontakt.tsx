@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
-import { firma, zeiten } from '../data/firma';
+import { firma, whatsapps, zeiten } from '../data/firma';
+import { OfferteKnopf } from './Offerte';
 
 // "Kontakt": los cuatro pasos de su web unidos por un hilo de agua que baja con el scroll, con una gota en la punta,
 // y enciende cada paso al llegar. Al lado, la tarjeta de contacto con la dirección actual y el horario.
@@ -97,14 +98,33 @@ export default function Kontakt() {
             </p>
             <p className="mt-2 text-sm text-frost/65">Rufen Sie an oder schreiben Sie uns. Wir melden uns innerhalb von 24 Stunden.</p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
-              <a href={firma.telefonLink} className="btn btn-gold justify-center">
+              <OfferteKnopf className="btn btn-gold justify-center">
+                <Icono d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M9 15l2 2 4-4" />
+                Offerte anfragen
+              </OfferteKnopf>
+              <a href={firma.telefonLink} className="btn btn-glas justify-center">
                 <Icono d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" />
                 Jetzt anrufen
               </a>
-              <a href={firma.whatsapp} target="_blank" rel="noopener" className="btn btn-glas justify-center">
-                <Icono d="M3 21l1.7-4.6A8.5 8.5 0 1 1 8 19.6L3 21Z M9 9.5c0 3 2.5 5.5 5.5 5.5" />
-                WhatsApp
-              </a>
+              {/* Dos WhatsApp y no uno: cada botón abre el chat de una persona
+                  concreta y con el saludo ya escrito. Quien mire la web elige
+                  a quién escribe, y no espera a que conteste justo esa. */}
+              {whatsapps.map((w) => (
+                <a
+                  key={w.link}
+                  href={w.link}
+                  target="_blank"
+                  rel="noopener"
+                  className="btn btn-glas justify-center"
+                  aria-label={`WhatsApp an ${w.name}, ${w.sprache}, ${w.nummer}`}
+                >
+                  <Icono d="M3 21l1.7-4.6A8.5 8.5 0 1 1 8 19.6L3 21Z M9 9.5c0 3 2.5 5.5 5.5 5.5" />
+                  <span className="text-left leading-tight">
+                    WhatsApp · {w.name}
+                    <span className="block text-[11px] font-normal tracking-wide opacity-65">{w.sprache}</span>
+                  </span>
+                </a>
+              ))}
             </div>
 
             <div className="mt-8 grid gap-5 border-t border-frost/12 pt-7">
@@ -112,6 +132,20 @@ export default function Kontakt() {
                 <a href={firma.telefonLink} className="hover:text-gold">
                   {firma.telefon}
                 </a>
+              </Zeile>
+              <Zeile icono="M3 21l1.7-4.6A8.5 8.5 0 1 1 8 19.6L3 21Z M9 9.5c0 3 2.5 5.5 5.5 5.5" titel="WhatsApp">
+                <ul className="grid gap-1">
+                  {whatsapps.map((w) => (
+                    <li key={w.link} className="flex flex-wrap items-baseline gap-x-2">
+                      <span className="text-frost/65">
+                        {w.name} <span className="text-frost/40">· {w.sprache}</span>
+                      </span>
+                      <a href={w.link} target="_blank" rel="noopener" className="hover:text-gold">
+                        {w.nummer}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </Zeile>
               <Zeile icono="M3 6h18v12H3V6Z M3 7l9 6 9-6" titel="E-Mail">
                 <a href={`mailto:${firma.email}`} className="break-all hover:text-gold">

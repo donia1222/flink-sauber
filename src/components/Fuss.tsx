@@ -1,4 +1,5 @@
 import { firma } from '../data/firma';
+import { OfferteKnopf } from './Offerte';
 
 // Pie: una última llamada a pedir oferta y el nombre en grande. Primero está empañado, como un cristal sucio; al bajar,
 // una rasqueta lo recorre de izquierda a derecha y deja las letras limpias en oro. Limpio, un brillo lo cruza de vez
@@ -20,9 +21,7 @@ export default function Fuss() {
             Bereit für <em>makellos?</em>
           </h2>
           <div className="flex flex-wrap gap-3">
-            <a href="#kontakt" className="btn btn-gold">
-              Offerte anfragen
-            </a>
+            <OfferteKnopf>Offerte anfragen</OfferteKnopf>
             <a href={firma.telefonLink} className="btn btn-glas">
               {firma.telefon}
             </a>
@@ -88,7 +87,12 @@ export default function Fuss() {
               Nach oben
             </a>
           </nav>
-          <p>© 2026 flink-sauber.li · Website von Lweb</p>
+          <p>
+            © 2026 flink-sauber.li · Website von{' '}
+            <a href="https://lweb.ch" target="_blank" rel="noopener" className="font-semibold text-gold hover:text-frost">
+              Lweb
+            </a>
+          </p>
         </div>
       </div>
     </footer>

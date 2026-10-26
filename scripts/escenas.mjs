@@ -86,6 +86,10 @@ for (const f of ['balkon-klein.jpg', 'fenster-innen-klein.jpg']) {
 }
 await sharp(`${E}/wintergarten.jpeg`).rotate().resize(900, 1100, { fit: 'cover' }).webp({ quality: 82 }).toFile(`${OUT}/eigene/wintergarten.webp`);
 // Retrato del equipo con las montañas detrás, y el valle del Rin para el pie.
-await sharp(`${E}/team-portrait.jpeg`).rotate().resize(960, 1200, { fit: 'cover', position: 'top' }).webp({ quality: 82 }).toFile(`${OUT}/eigene/team-portrait.webp`);
+// 27/10/2026: la foto es ahora la de los dos en el banco. Se recorta por el
+// CENTRO y no por arriba: en esta las personas están en el medio, y con
+// `top` el recorte se comía los pies (en la anterior era al revés, la cara
+// estaba arriba y había que conservarla).
+await sharp(`${E}/team-doris-diaz.jpg`).rotate().resize(960, 1200, { fit: 'cover', position: 'centre' }).webp({ quality: 84 }).toFile(`${OUT}/eigene/team-portrait.webp`);
 await sharp(`${E}/rheintal.jpeg`).rotate().resize(1600, 1600, { fit: 'cover', position: 'top' }).webp({ quality: 78 }).toFile(`${OUT}/eigene/rheintal.webp`);
 await sharp(`${E}/logo.png`).webp({ quality: 90, alphaQuality: 100 }).toFile(`${OUT}/eigene/logo.webp`);
