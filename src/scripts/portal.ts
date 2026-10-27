@@ -112,14 +112,23 @@ export function initPortal(world: HTMLElement, reduceMotion: boolean) {
 
   let tramo = 0;
   let t = 0;
-  // Limpieza inicial: el hero empieza sucio y la rasqueta lo limpia con el primer tramo de scroll (0 → 1).
-  let limpio = 0;
+  /* Limpieza inicial.
+     Antes empezaba en 0: el hero se veía sucio entero y la rasqueta solo
+     aparecía al mover el scroll, así que quien llegaba veía una foto velada
+     y no entendía qué tenía delante. Ahora arranca con un tercio ya limpio
+     —la rasqueta a la vista, con su franja clara detrás— y el scroll la
+     empuja desde ahí hasta el final. Es la misma animación: lo que cambia
+     es dónde empieza. */
+  const LIMPIO_AL_LLEGAR = 0.34;
+  let limpio = LIMPIO_AL_LLEGAR;
 
   const render = (self: ScrollTrigger) => {
     const y = self.scroll();
     const w = piecewise(y, [...marks.map((mark, i) => ({ y: mark.start, v: i })), { y: self.end, v: last + 0.5 }]);
     const at = Math.min(w, last);
-    limpio = range(w, 0.015, 0.3);
+    // El scroll reparte lo que QUEDA por limpiar, no el total: así no hay
+    // salto al primer movimiento del dedo.
+    limpio = LIMPIO_AL_LLEGAR + (1 - LIMPIO_AL_LLEGAR) * range(w, 0.015, 0.3);
     // Las gotas del indicador se llenan una a una.
     tropfen.forEach((n, i) => n.style.setProperty('--f', String(clamp01(at - i + 1))));
     if (hint) hint.style.opacity = String(clamp01(1 - w * 5));
